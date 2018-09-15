@@ -19,7 +19,7 @@
   "homepage": "https://github.com/dhavalpopat/nearby-events#readme",
   "dependencies": {
     "express": "^4.16.3",
-    "lowdb": "^1.0.0",
-    "request": "^2.88.0"
+    "helmet": "^3.13.0",
+    "lowdb": "^1.0.0"
   }
 }

@@ -1,13 +1,15 @@
+const helmet = require('helmet');
+const https = require('https');
 const express = require('express');
+
 const app = express();
 app.use(express.json());
+app.use(helmet());
 
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb adapter for saving to localStorage
 const adapter = new FileSync('db.json');
 const db = low(adapter);  // create database instance
-
-const https = require('https');
 
 let category = "Music";
 let genreId = "KnvZfZ7vAee";
@@ -45,7 +47,7 @@ app.post('/register', (req, res) => {
     }
     db.get('users')
     .push(user)
-    .write()
+    .write();
     res.send('You have been successfully registered.');
 });
 
@@ -54,8 +56,8 @@ app.post('/register', (req, res) => {
 // api endpoint for getting nearby events
 app.get('/getEvents', (req, res) => {
     https.get(options, (https_res) => {
-        let data = "";
-        let result = "";
+        let data = '';
+        let result = '';
 
         // chunk of data has been received
         https_res.on('data', (chunk) => {
@@ -67,14 +69,25 @@ app.get('/getEvents', (req, res) => {
             let dataJSON = JSON.parse(data);
             for (let i = 0; i < dataJSON.length; i++) {
                 if (dataJSON[i].name != null){
-                    result += dataJSON[i].name + "\n";
+                    result += dataJSON[i].name + '\n';
                 }
             }
-            res.send("Nearby Events: " + result);
+            res.send('Nearby Events: ' + result);
         });
-    }).on("error", (err) => {
-        console.log("Error: " + err.message);
+    }).on('error', (err) => {
+        console.log('Error: ' + err.message);
     });
+});
+
+// api endpoint to update user's preferences
+app.put('/setPreferences', (req, res) => {
+    console.log(req.body)
+    db.get('users')
+    .find({ id: 'dhaval' })
+    .assign({ category: req.body.category })
+    .assign({ genre: req.body.genre })
+    .write();
+    res.send('Your preferences have been successfully updated.');
 });
 
 const port = process.env.PORT || 4000;

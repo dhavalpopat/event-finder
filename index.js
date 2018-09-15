@@ -7,12 +7,18 @@ const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb ada
 const adapter = new FileSync('db.json');
 const db = low(adapter);  // create database instance
 
-const request = require('request');
+const https = require('https');
 
-let category = 'Music';
+let category = "Music";
 let genreId = "KnvZfZ7vAee";
-const endpointURL = "https://yv1x0ke9cl.execute-api.us-east-1.amazonaws.com/prod/events?classificationName=" + category + "&genreId=" + genreId;
-let url = "http://stitapplicant:zvaaDsZHLNLFdUVZ_3cQKns@" + endpointURL;
+const user = "stitapplicant";
+const password = "zvaaDsZHLNLFdUVZ_3cQKns";
+
+var options = {
+    host: "yv1x0ke9cl.execute-api.us-east-1.amazonaws.com",
+    path: "/prod/events?classificationName=" + category + "&genreId=" + genreId,
+    auth: user + ":" + password
+};
 
 // set default state
 db.defaults({ users: [] })
@@ -47,12 +53,28 @@ app.post('/register', (req, res) => {
 
 // api endpoint for getting nearby events
 app.get('/getEvents', (req, res) => {
-    request(
-        { url : url },
-        function (error, response, body) {
-            res.send(error);
-        }
-    );
+    https.get(options, (https_res) => {
+        let data = "";
+        let result = "";
+
+        // chunk of data has been received
+        https_res.on('data', (chunk) => {
+            data += chunk;
+        });
+        
+        // whole response has been received
+        https_res.on('end', () => {
+            let dataJSON = JSON.parse(data);
+            for (let i = 0; i < dataJSON.length; i++) {
+                if (dataJSON[i].name != null){
+                    result += dataJSON[i].name + "\n";
+                }
+            }
+            res.send("Nearby Events: " + result);
+        });
+    }).on("error", (err) => {
+        console.log("Error: " + err.message);
+    });
 });
 
 const port = process.env.PORT || 4000;

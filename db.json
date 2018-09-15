@@ -1,10 +1,11 @@
 {
   "users": [
     {
-      "id": "dhaval",
+      "name": "Dhaval Popat",
+      "email": "dkp288@nyu.edu",
       "password": "123456",
-      "category": "Film",
-      "genre": "KnvZfZ7vAkF"
+      "category": "Music",
+      "genre": "Jazz"
     }
   ]
 }

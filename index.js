@@ -1,15 +1,19 @@
 const helmet = require('helmet');
 const https = require('https');
 const express = require('express');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb adapter for saving to local storage
+const register = require('./routes/register')
 
 const app = express();
 app.use(express.json());
 app.use(helmet());
 
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb adapter for saving to localStorage
 const adapter = new FileSync('db.json');
 const db = low(adapter);  // create database instance
+
+// handling routes
+app.use('/register', register);    // api endpoint for user registeration
 
 let category = "Music";
 let genreId = "KnvZfZ7vAee";
@@ -24,7 +28,7 @@ var options = {
 
 // set default state
 db.defaults({ users: [] })
-  .write()
+  .write();
 
 // api endpoint for home page
 app.get('/', (req, res) => {
@@ -34,21 +38,8 @@ app.get('/', (req, res) => {
 // api endpoint to reset user database
 app.delete('/reset', (req, res) => {
     db.set('users', [])
-    .write()
-});
-
-// api endpoint for user registeration
-app.post('/register', (req, res) => {
-    const user = {
-        id: req.body.id,
-        password: req.body.password,
-        category: req.body.category,
-        genre: req.body.genre
-    }
-    db.get('users')
-    .push(user)
     .write();
-    res.send('You have been successfully registered.');
+res.send('The database has been successfully truncated.');
 });
 
 // api endpoint for user login

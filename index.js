@@ -1,10 +1,13 @@
 const helmet = require('helmet');
-const https = require('https');
 const express = require('express');
+const config = require('config');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb adapter for saving to local storage
+
 const register = require('./routes/register');
 const auth = require('./routes/auth');
+const events = require('./routes/events');
+const preferences = require('./routes/preferences');
 
 const adapter = new FileSync('db.json');
 const db = low(adapter);  // create database instance
@@ -13,20 +16,21 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 
+if (!config.get('jwtPrivateKey')) {
+    console.error('FATAL ERROR: jwtPrivateKey is not defined.');
+    process.exit(1);
+}
+
+if (!config.get('apiExternalPassword')) {
+    console.error('FATAL ERROR: apiExternalPassword is not defined.');
+    process.exit(1);
+}
+
 // handling routes
-app.use('/register', register);     // api endpoint for user registeration
-app.use('/login', auth);            // api endpoint for authenticating users
-
-let category = "Music";
-let genreId = "KnvZfZ7vAee";
-const user = "stitapplicant";
-const password = "zvaaDsZHLNLFdUVZ_3cQKns";
-
-var options = {
-    host: "yv1x0ke9cl.execute-api.us-east-1.amazonaws.com",
-    path: "/prod/events?classificationName=" + category + "&genreId=" + genreId,
-    auth: user + ":" + password
-};
+app.use('/register', register);             // api endpoint for user registeration
+app.use('/login', auth);                    // api endpoint for authenticating users
+app.use('/getEvents', events);              // api endpoint for getting nearby events
+app.use('/setPreferences', preferences);    // api endpoint to update user's preferences
 
 // set default state
 db.defaults({ users: [] })
@@ -43,45 +47,6 @@ app.delete('/delete', (req, res) => {
     .remove({ email: req.body.email })
     .write()
 res.send('The user with email ' + req.body.email + ' has been successfully deleted.');
-});
-
-// api endpoint for user login
-
-// api endpoint for getting nearby events
-app.get('/getEvents', (req, res) => {
-    https.get(options, (https_res) => {
-        let data = '';
-        let result = '';
-
-        // chunk of data has been received
-        https_res.on('data', (chunk) => {
-            data += chunk;
-        });
-        
-        // whole response has been received
-        https_res.on('end', () => {
-            let dataJSON = JSON.parse(data);
-            for (let i = 0; i < dataJSON.length; i++) {
-                if (dataJSON[i].name != null){
-                    result += dataJSON[i].name + '\n';
-                }
-            }
-            res.send('Nearby Events: ' + result);
-        });
-    }).on('error', (err) => {
-        console.log('Error: ' + err.message);
-    });
-});
-
-// api endpoint to update user's preferences
-app.put('/setPreferences', (req, res) => {
-    console.log(req.body)
-    db.get('users')
-    .find({ id: 'dhaval' })
-    .assign({ category: req.body.category })
-    .assign({ genre: req.body.genre })
-    .write();
-    res.send('Your preferences have been successfully updated.');
 });
 
 const port = process.env.PORT || 4000;

@@ -1,0 +1,4 @@
+{
+    "jwtPrivateKey": "nearbyEvents_jwtPrivateKey",
+    "apiExternalPassword": "nearbyEvents_apiExternalPassword"
+}

@@ -1,7 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb adapter for saving to local storage
 
@@ -29,7 +28,7 @@ router.post('/', async (req, res) => {
     if(!validPassword) return res.status(400).send('Invalid email or password.');
 
     // 
-    const token = jwt.sign({ email: user.email }, 'privateKey');
+    const token = userModel.generateAuthToken(user);  // generate the authentication token
     res.send('You have been successfully authenticated.');
 });
 

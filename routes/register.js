@@ -38,7 +38,10 @@ router.post('/', async (req, res) => {
     db.get('users')
     .push(newUser)
     .write();
-    res.send('You have been successfully registered.');
+
+    // login the user when they register
+    const token = userModel.generateAuthToken(user);  // generate the authentication token
+    res.header('x-auth-token', token).send('You have been successfully registered.');
 });
 
 module.exports = router;

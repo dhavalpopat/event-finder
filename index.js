@@ -3,17 +3,19 @@ const https = require('https');
 const express = require('express');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb adapter for saving to local storage
-const register = require('./routes/register')
+const register = require('./routes/register');
+const auth = require('./routes/auth');
+
+const adapter = new FileSync('db.json');
+const db = low(adapter);  // create database instance
 
 const app = express();
 app.use(express.json());
 app.use(helmet());
 
-const adapter = new FileSync('db.json');
-const db = low(adapter);  // create database instance
-
 // handling routes
-app.use('/register', register);    // api endpoint for user registeration
+app.use('/register', register);     // api endpoint for user registeration
+app.use('/login', auth);            // api endpoint for authenticating users
 
 let category = "Music";
 let genreId = "KnvZfZ7vAee";
@@ -36,10 +38,11 @@ app.get('/', (req, res) => {
 });
 
 // api endpoint to reset user database
-app.delete('/reset', (req, res) => {
-    db.set('users', [])
-    .write();
-res.send('The database has been successfully truncated.');
+app.delete('/delete', (req, res) => {
+    db.get('users')
+    .remove({ email: req.body.email })
+    .write()
+res.send('The user with email ' + req.body.email + ' has been successfully deleted.');
 });
 
 // api endpoint for user login

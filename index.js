@@ -2,8 +2,10 @@ const helmet = require('helmet');
 const express = require('express');
 const config = require('config');
 const store = require('store');
+const admin = require('./middleware/admin');
+const auth = require('./middleware/auth');
 const register = require('./routes/register');
-const auth = require('./routes/auth');
+const login = require('./routes/login');
 const events = require('./routes/events');
 const preferences = require('./routes/preferences');
 const remove = require('./routes/delete');
@@ -30,7 +32,7 @@ if (!config.get('apiExternalPassword')) {
 
 // handling routes
 app.use('/register', register);             // api endpoint for user registeration
-app.use('/login', auth);                    // api endpoint for authenticating users
+app.use('/login', login);                    // api endpoint for authenticating users
 app.use('/getEvents', events);              // api endpoint for getting nearby events
 app.use('/setPreferences', preferences);    // api endpoint to update user's preferences
 app.use('/delete', remove);                 // api endpoint to delete user's account
@@ -41,7 +43,7 @@ app.get('/', (req, res) => {
 });
 
 // api endpoint to get all the users
-app.get('/users', (req, res) => {
+app.get('/users', [auth, admin], (req, res) => {
     global.db.find({}, (err, users) => {
         res.send(users);
     });

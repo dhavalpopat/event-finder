@@ -14,7 +14,8 @@ function validateUser(user) {
 }
 
 function generateAuthToken(user) {
-    const token = jwt.sign({ email: user.email }, config.get('jwtPrivateKey'));
+    // payload has user's email and isAdmin
+    const token = jwt.sign({ email: user.email, isAdmin: user.isAdmin }, config.get('jwtPrivateKey'));
     return token;
 }
 

@@ -24,7 +24,8 @@ router.post('/', (req, res) => {
                 email: req.body.email,
                 password: password,
                 category: req.body.category,
-                genre: req.body.genre
+                genre: req.body.genre,
+                isAdmin: false
             }
             global.db.insert(newUser, (err, newAddedUser) => {
                 // login the user when they register

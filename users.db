@@ -1,2 +1,3 @@
-{"name":"Dhaval Popat","email":"dhaval.popat@nyu.edu","password":"$2b$10$QTscGQxFEQGcJjlCbA4LJ.TLaIq1D4hCn7O6ftX02AwP02PpB9476","_id":"P7XQNmDwGAQzSH4D"}
+{"name":"Dhaval Popat","email":"dhaval.popat@nyu.edu","password":"$2b$10$syRdPHM0MGY5x8G.2VwIuOwUPgb4/diqyJ8HMyWLzEMrXCyo/82Ue","category":"Music","genre":"KnvZfZ7vAkJ","isAdmin":true,"_id":"ZHUMAeTgMLRb6Dl1"}
+{"name":"Dhaval Popat","email":"dkp288@nyu.edu","password":"$2b$10$JO8ZCo22ou1SpuxaAz6sbOjD8h6fmZ/W6ddfb945Ork.gYxXF8J5O","category":"Sports","genre":"KnvZfZ7vAkJ","isAdmin":false,"_id":"bvNLInce2829vfC2"}
 {"$$indexCreated":{"fieldName":"email","unique":true,"sparse":false}}

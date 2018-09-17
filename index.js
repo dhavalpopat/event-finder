@@ -5,6 +5,7 @@ const register = require('./routes/register');
 const auth = require('./routes/auth');
 const events = require('./routes/events');
 const preferences = require('./routes/preferences');
+const remove = require('./routes/delete');
 const global = require('./global');
 
 const app = express();
@@ -31,11 +32,11 @@ app.use('/register', register);             // api endpoint for user registerati
 app.use('/login', auth);                    // api endpoint for authenticating users
 app.use('/getEvents', events);              // api endpoint for getting nearby events
 app.use('/setPreferences', preferences);    // api endpoint to update user's preferences
-app.use('/delete', delete);                 // api endpoint to delete user's account
+app.use('/delete', remove);                 // api endpoint to delete user's account
 
 // api endpoint for home page
 app.get('/', (req, res) => {
-    res.send('Welcome');
+    res.send('Welcome!');
 });
 
 // api endpoint to get all the users
@@ -43,6 +44,12 @@ app.get('/users', (req, res) => {
     global.db.find({}, (err, users) => {
         res.send(users);
     });
+});
+
+// api endpoint to logout from current session
+app.get('/logout', (req, res) => {
+    store.remove('x-auth-token');
+    res.send('You have been successfully logged out.');
 });
 
 const port = process.env.PORT || 4000;

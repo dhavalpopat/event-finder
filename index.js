@@ -31,18 +31,11 @@ app.use('/register', register);             // api endpoint for user registerati
 app.use('/login', auth);                    // api endpoint for authenticating users
 app.use('/getEvents', events);              // api endpoint for getting nearby events
 app.use('/setPreferences', preferences);    // api endpoint to update user's preferences
+app.use('/delete', delete);                 // api endpoint to delete user's account
 
 // api endpoint for home page
 app.get('/', (req, res) => {
     res.send('Welcome');
-});
-
-// api endpoint to reset user database
-app.delete('/delete', (req, res) => {
-    // global.db.get('users')
-    // .remove({ email: req.body.email })
-    // .write();
-    res.send('The user with email ' + req.body.email + ' has been successfully deleted.');
 });
 
 // api endpoint to get all the users

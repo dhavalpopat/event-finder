@@ -37,13 +37,15 @@ router.get('/', auth, (req, res) => {
                 // whole response has been received
                 https_res.on('end', () => {
                     let dataJSON = JSON.parse(data);
+                    let numbering = 1;
                     for (let i = 0; i < dataJSON.length; i++) {
                         if (dataJSON[i].name != null){
-                            result += dataJSON[i].name + '\n';
+                            result += numbering + ') ' + dataJSON[i].name + '\n';
+                            numbering += 1;
                         }
                     }
                     if (result === '') res.send('There are no events nearby you that match your preferences.')
-                    else res.send('Following are the nearby events that match your preferences: \n' + result);
+                    else res.send('Following are the nearby events that match your preferences: \n\n' + result);
                 });
             }).on('error', (err) => {
                 console.log('Error: ' + err.message);

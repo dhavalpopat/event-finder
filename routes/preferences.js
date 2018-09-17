@@ -1,7 +1,9 @@
+const express = require('express');
+const auth = require('../middleware/auth');
+
 const router = express.Router();
 
-app.put('/', (req, res) => {
-    console.log(req.body)
+router.put('/', auth, (req, res) => {
     db.get('users')
     .find({ id: 'dhaval' })
     .assign({ category: req.body.category })
@@ -9,3 +11,5 @@ app.put('/', (req, res) => {
     .write();
     res.send('Your preferences have been successfully updated.');
 });
+
+module.exports = router;

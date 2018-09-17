@@ -1,6 +1,12 @@
 const express = require('express');
 const https = require('https');
+const config = require('config');
 const auth = require('../middleware/auth');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb adapter for saving to local storage
+
+const adapter = new FileSync('db.json');
+const db = low(adapter);  // create database instance
 
 const router = express.Router();
 
@@ -9,6 +15,8 @@ router.get('/', auth, (req, res) => {
     const user = db.get('users')
     .find({ email: req.user.email })
     .value();
+
+    // console.log('user: ' + JSON.stringify(user));
 
     const category = user.category;
     const genreId = user.genre;
@@ -38,7 +46,8 @@ router.get('/', auth, (req, res) => {
                     result += dataJSON[i].name + '\n';
                 }
             }
-            res.send('Nearby Events: ' + result);
+            if (result === '') res.send('There are no events nearby you that match your preferences.')
+            else res.send('Following are the nearby events that match your preferences: \n' + result);
         });
     }).on('error', (err) => {
         console.log('Error: ' + err.message);

@@ -34,7 +34,7 @@ if (!config.get('apiExternalPassword')) {
 // handling routes
 app.use('/register', register);             // api endpoint for user registeration
 app.use('/login', auth);                    // api endpoint for authenticating users
-//app.use('/getEvents', events);              // api endpoint for getting nearby events
+app.use('/getEvents', events);              // api endpoint for getting nearby events
 app.use('/setPreferences', preferences);    // api endpoint to update user's preferences
 
 // set default state

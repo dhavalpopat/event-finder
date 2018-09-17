@@ -3,6 +3,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');  // FileSync is a lowdb adapter for saving to local storage
+const store = require('store');
 
 const router = express.Router();
 const adapter = new FileSync('db.json');
@@ -40,7 +41,9 @@ router.post('/', async (req, res) => {
     .write();
 
     // login the user when they register
-    const token = userModel.generateAuthToken(user);  // generate the authentication token
+    const token = userModel.generateAuthToken(newUser);  // generate the authentication token
+    store.clearAll();
+    store.set('x-auth-token', token);  // save token in local storage at client side
     res.header('x-auth-token', token).send('You have been successfully registered.');
 });
 

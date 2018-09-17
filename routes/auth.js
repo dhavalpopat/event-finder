@@ -1,8 +1,8 @@
+const userModel = require('../models/user');
 const express = require('express');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const store = require('store');
-const userModel = require('../models/user');
 const global = require('../global');
 
 const router = express.Router();
@@ -33,8 +33,8 @@ router.post('/', (req, res) => {
 
 function validate(req) {
     const schema = {
-        email: Joi.string().min(5).max(256).required().email(),
-        password: Joi.string().min(5).max(256).required(),
+        email: Joi.string().required(),
+        password: Joi.string().required()
     };
     return Joi.validate(req, schema);
 }

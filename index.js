@@ -1,6 +1,7 @@
 const helmet = require('helmet');
 const express = require('express');
 const config = require('config');
+const store = require('store');
 const register = require('./routes/register');
 const auth = require('./routes/auth');
 const events = require('./routes/events');
@@ -47,7 +48,7 @@ app.get('/users', (req, res) => {
 });
 
 // api endpoint to logout from current session
-app.get('/logout', (req, res) => {
+app.delete('/logout', (req, res) => {
     store.remove('x-auth-token');
     res.send('You have been successfully logged out.');
 });

@@ -10,10 +10,9 @@ router.get('/', auth, (req, res) => {
     global.db.findOne({ email: req.user.email }, async (err, user) => {
         if (user === null) {
             // user not found in the database
-            return res.status(400).send('Session expired. Please login to continue.');
+            return res.status(400).send('Please login to continue.');
         }
         else {
-            // console.log('user: ' + JSON.stringify(user));
             const category = user.category;
             const genreId = user.genre;
             const apiExternalUser = config.get('apiExternalUser');
@@ -28,7 +27,7 @@ router.get('/', auth, (req, res) => {
             https.get(options, (https_res) => {
                 let data = '';
                 let result = '';
-        
+                
                 // chunk of data has been received
                 https_res.on('data', (chunk) => {
                     data += chunk;

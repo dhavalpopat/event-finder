@@ -1,2 +1,2 @@
-# nearby-events
-This code is for "STIT BACKEND PROGRAMMING CHALLENGE" to design a backend for an application that shows the user “Events Around You”
+# event-finder
+The local events data is fetched by hitting an external API using basic auth. The authentication module and a middleware function have been implemented to authorize users’ API requests. There is an API endpoint that can be accessed only by admins to retrieve information of users.
